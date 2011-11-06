@@ -1,0 +1,4 @@
+Simple script to grab CCC Presale tickets
+
+TODO:
+- Handle unexpected errors (e.g. Gateway Error)
