@@ -31,22 +31,22 @@ soup = soup2
 
 while not ordered:
 
-	post3 = {}
-	for item in soup.findAll("input", type="hidden"): post3[item['name']] = item['value']
-	for item in soup.findAll("input", type="submit"): post3[item['name']] = item['value']
+    post3 = {}
+    for item in soup.findAll("input", type="hidden"): post3[item['name']] = item['value']
+    for item in soup.findAll("input", type="submit"): post3[item['name']] = item['value']
 
-	link3 = "https://presale.events.ccc.de" + soup.find("form")['action']
+    link3 = "https://presale.events.ccc.de" + soup.find("form")['action']
 
-	page = s.post(link3, data=post3)
-	soup = BeautifulSoup(page.content)
+    page = s.post(link3, data=post3)
+    soup = BeautifulSoup(page.content)
 
-	last = open("last.html", "w")
-	last.write(soup.prettify())
-	last.close()
+    last = open("last.html", "w")
+    last.write(soup.prettify())
+    last.close()
 
-	if soup.find(text=lambda(x): x.find("There are currently not enough tickets available") != -1): 
-		print "Not Open"
-		sleep(1)
-	else:
-		print "Ordered"
-		ordered = True
+    if soup.find(text=lambda(x): x.find("There are currently not enough tickets available") != -1): 
+        print "Not Open"
+        sleep(1)
+    else:
+        print "Ordered"
+        ordered = True
