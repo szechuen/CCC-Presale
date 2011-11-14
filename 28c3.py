@@ -7,37 +7,55 @@ s = requests.session()
 username = ''
 password = ''
 
-# SignIn
+print "CCC-Presale 28C3 Script by @sctan [https://github.com/szechuen/CCC-Presale]"
 
-page1 = s.get("https://presale.events.ccc.de/accounts/sign_in")
-soup1 = BeautifulSoup(page1.content)
+# Sign In
 
-post2 = {}
-for item in soup1.findAll("input", type="hidden"): post2[item['name']] = item['value']
-for item in soup1.findAll("input", type="submit"): post2[item['name']] = item['value']
-post2['account[username]'] = username
-post2['account[password]'] = password
+print "Accessing Sign In..."
 
-link2 = "https://presale.events.ccc.de" + soup1.find("form")['action']
+while True:
+    sign_in = s.get("https://presale.events.ccc.de/accounts/sign_in")
+    if sign_in.ok: break
+    print "Request Error - Retrying..."
+
+sign_in_soup = BeautifulSoup(sign_in.content)
+
+account_post = {}
+for item in sign_in_soup.findAll("input", type="hidden"): account_post[item['name']] = item['value']
+for item in sign_in_soup.findAll("input", type="submit"): account_post[item['name']] = item['value']
+account_post['account[username]'] = username
+account_post['account[password]'] = password
+
+account_link = "https://presale.events.ccc.de" + sign_in_soup.find("form")['action']
 
 # Account
 
-page2 = s.post(link2, data=post2)
-soup2 = BeautifulSoup(page2.content)
+print "Accessing Account..."
+
+while True:
+    account = s.post(account_link, data=account_post)
+    if account.ok: break
+    print "Request Error - Retrying..."
+
+account_soup = BeautifulSoup(account.content)
 
 ordered = False
-page = page2
-soup = soup2
+page = account
+soup = account_soup
 
 while not ordered:
 
-    post3 = {}
-    for item in soup.findAll("input", type="hidden"): post3[item['name']] = item['value']
-    for item in soup.findAll("input", type="submit"): post3[item['name']] = item['value']
+    post = {}
+    for item in soup.findAll("input", type="hidden"): post[item['name']] = item['value']
+    for item in soup.findAll("input", type="submit"): post[item['name']] = item['value']
 
-    link3 = "https://presale.events.ccc.de" + soup.find("form")['action']
+    link = "https://presale.events.ccc.de" + soup.find("form")['action']
 
-    page = s.post(link3, data=post3)
+    while True:
+        page = s.post(link, data=post)
+        if page.ok: break
+        print "Request Error - Retrying..."
+    
     soup = BeautifulSoup(page.content)
 
     last = open("last.html", "w")
@@ -45,8 +63,8 @@ while not ordered:
     last.close()
 
     if soup.find(text=lambda(x): x.find("There are currently not enough tickets available") != -1): 
-        print "Not Open"
+        print "Not Open - Sleeping before retrying..."
         sleep(1)
     else:
-        print "Ordered"
+        print "Ordered :D"
         ordered = True
