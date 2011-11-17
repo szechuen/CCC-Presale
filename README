@@ -2,5 +2,8 @@ CCC-Presale: Simple script to grab CCC Presale tickets
 
 Dependencies:
 - Python
-  * Requests (http://docs.python-requests.org/en/latest/index.html) - easy_install requests
-  * Beautiful Soup (http://www.crummy.com/software/BeautifulSoup/) - easy_install BeautifulSoup
+  * Requests (http://docs.python-requests.org/en/latest/index.html) == 0.7.6
+  * Beautiful Soup (http://www.crummy.com/software/BeautifulSoup/) == 3.2.0
+
+Installation:
+$ sudo pip install -r requirements.txt
